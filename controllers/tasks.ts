@@ -1,0 +1,43 @@
+import {Todo} from '../models/todo.js'
+import { Request, Response } from 'express';
+async function handleGetAllTasks(req:Request,res:Response) {
+
+    const allTasks = await Todo.find({})
+    return res.status(200).json(allTasks)
+}
+async function handleNewTask(req:Request,res:Response) {
+    await Todo.create(req.body)
+    return res.status(201).json({mesg:'Created Task'})
+}
+
+async function handleUpdateTask(req:Request,res:Response) {
+   const userId= await Todo.findByIdAndUpdate(req.params.id,req.body)
+    if(!userId){
+        return res.sendStatus(404)
+    }
+    return res.sendStatus(200)
+}
+
+async function handleDeleteTask(req:Request,res:Response){
+    const userId= await Todo.findByIdAndDelete(req.params.id)
+    if(!userId){
+        return res.sendStatus(404)
+    }
+    return res.sendStatus(200)
+}
+
+async function handleGetTask(req:Request,res:Response){
+    const userId = await Todo.findById(req.params.id)
+    if(!userId){
+        return res.sendStatus(404)
+    }
+    
+    return res.status(200).json(userId)
+}
+ export{
+    handleGetAllTasks,
+    handleNewTask,
+    handleUpdateTask,
+    handleDeleteTask,
+    handleGetTask,
+ }
